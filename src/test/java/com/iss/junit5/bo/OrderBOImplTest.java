@@ -36,6 +36,20 @@ class OrderBOImplTest {
 		
 		assertTrue(result);
 	}
+	
+	@Test
+	void placeOrder_Should_Not_Create_An_Order() throws SQLException, BOException {
+		OrderBOImpl bo = new OrderBOImpl();
+		bo.setDao(dao);
+		
+		Order order = new Order();
+		when(dao.create(order)).thenReturn(new Integer(0));
+		
+		boolean result = bo.placeOrder(order);
+		
+		assertFalse(result);
+	}
+
 
 	@Test
 	void testCancelOrder() {

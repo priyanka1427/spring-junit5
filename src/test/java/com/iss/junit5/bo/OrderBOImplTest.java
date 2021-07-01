@@ -2,6 +2,7 @@ package com.iss.junit5.bo;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
@@ -50,7 +51,18 @@ class OrderBOImplTest {
 		assertFalse(result);
 	}
 
-
+	@Test
+	void placeOrder_Should_Throw_BOException() throws SQLException, BOException {
+		OrderBOImpl bo = new OrderBOImpl();
+		bo.setDao(dao);
+		
+		Order order = new Order();
+		when(dao.create(order)).thenThrow(SQLException.class);
+		
+		Assertions.assertThrows(BOException.class, ()->{
+			boolean result = bo.placeOrder(order);
+		});
+	}
 	@Test
 	void testCancelOrder() {
 		fail("Not yet implemented");

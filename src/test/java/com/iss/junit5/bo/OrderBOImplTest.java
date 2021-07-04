@@ -20,16 +20,17 @@ class OrderBOImplTest {
 	@Mock
 	OrderDAO dao;
 	
+	OrderBOImpl bo = new OrderBOImpl();
+	
 	@BeforeEach
 	public void setup() {
 		MockitoAnnotations.initMocks(this);
+		bo.setDao(dao);
+		
 	}
 
 	@Test
 	void placeOrder_Should_Create_An_Order() throws SQLException, BOException {
-		OrderBOImpl bo = new OrderBOImpl();
-		bo.setDao(dao);
-		
 		Order order = new Order();
 		when(dao.create(order)).thenReturn(new Integer(1));
 		
@@ -40,9 +41,6 @@ class OrderBOImplTest {
 	
 	@Test
 	void placeOrder_Should_Not_Create_An_Order() throws SQLException, BOException {
-		OrderBOImpl bo = new OrderBOImpl();
-		bo.setDao(dao);
-		
 		Order order = new Order();
 		when(dao.create(order)).thenReturn(new Integer(0));
 		
@@ -53,9 +51,6 @@ class OrderBOImplTest {
 
 	@Test
 	void placeOrder_Should_Throw_BOException() throws SQLException, BOException {
-		OrderBOImpl bo = new OrderBOImpl();
-		bo.setDao(dao);
-		
 		Order order = new Order();
 		when(dao.create(order)).thenThrow(SQLException.class);
 		
@@ -63,24 +58,17 @@ class OrderBOImplTest {
 			boolean result = bo.placeOrder(order);
 		});
 	}
+	
 	@Test
-	void testCancelOrder() {
-		fail("Not yet implemented");
+	void cancelOrder_Should_Cancel_Order() throws SQLException, BOException {
+		Order order = new Order();
+		when(dao.read(123)).thenReturn(order);
+		when(dao.update(order)).thenReturn(new Integer(1));
+		boolean result = bo.cancelOrder(123);
+		assertTrue(result);
+		verify(dao).read(123);
+		verify(dao).update(order);
 	}
 
-	@Test
-	void testDeleteOrder() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testGetDao() {
-		fail("Not yet implemented");
-	}
-
-	@Test
-	void testSetDao() {
-		fail("Not yet implemented");
-	}
 
 }

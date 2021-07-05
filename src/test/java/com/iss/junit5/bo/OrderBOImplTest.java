@@ -69,6 +69,16 @@ class OrderBOImplTest {
 		verify(dao).read(123);
 		verify(dao).update(order);
 	}
-
+	
+	@Test
+	void cancelOrder_Should_Not_Cancel_Order() throws SQLException, BOException {
+		Order order = new Order();
+		when(dao.read(123)).thenReturn(order);
+		when(dao.update(order)).thenReturn(new Integer(0));
+		boolean result = bo.cancelOrder(123);
+		assertFalse(result);
+		verify(dao).read(123);
+		verify(dao).update(order);
+	}
 
 }
